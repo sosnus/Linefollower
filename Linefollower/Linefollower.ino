@@ -12,41 +12,43 @@
 int blad = 0;
 int liczba_czuj_na_linii = 0;
 int granica = 800;
-int czujniki_waga[6] = {-30,-20,-10,10,20,30};
+int czujniki_waga[6] = { -30, -20, -10, 10, 20, 30};
 int czujniki_adc[6];
 int czujniki_bin[6];
-const int adc_kanal[]= {A0,A1,A2,A3,A4,A5};
+const int adc_kanal[] = {A0, A1, A2, A3, A4, A5};
 
 void algorytm()
 {
   //zerowanie zmiennych!!!
-  blad=0;
+  blad = 0;
   liczba_czuj_na_linii = 0;
   //odczytaj wartości z czujników i zapisz do tablicy czujniki_adc[] oraz zapełnianie tablicy czujniki)bin[]
-  for(int i=0;i<=5;i++)
+  for (int i = 0; i <= 5; i++)
   {
-  czujniki_adc[i] = analogRead(adc_kanal[i]);
-  if(czujniki_adc[i]<800) czujniki_bin[i] = 0; else czujniki_bin[i]=1;
+    czujniki_adc[i] = analogRead(adc_kanal[i]);
+    if (czujniki_adc[i] < 800) czujniki_bin[i] = 0; else czujniki_bin[i] = 1;
   }
 
   //obliczamy uchyb aktualny (błąd)
-for(int i=0;i<=5;i++)
-{
-  if(czujniki_bin[i]==1)
+  for (int i = 0; i <= 5; i++)
   {
-    blad = blad + czujniki_waga[i];
-    liczba_czuj_na_linii++;
+    if (czujniki_bin[i] == 1)
+    {
+      blad = blad + czujniki_waga[i];
+      liczba_czuj_na_linii++;
     }
-}
-blad = blad / liczba_czuj_na_linii;
-  
+  }
+  blad = blad / liczba_czuj_na_linii;
+
 
   //wypisujemy wartości cyfrowe (binarne) na ekran
   Serial.print("\n\r BLAD=");
-Serial.print(blad);
+  Serial.print(blad);
 
- 
-   
+  Serial.print("    CZUJNIKI= ");
+  for(int i=0;i<=5;i++)
+      Serial.print(czujniki_bin[i]);
+
   delay(250);
 }// -------   KONIEC ALGORYTMU LF ------
 
@@ -59,8 +61,8 @@ void setup() {
 
   //Konfiguracja pozostalych elementow
   pinMode(BUZZER, OUTPUT);
-  digitalWrite(BUZZER, 0); //Wylaczenie buzzera  
-  pinMode(LED, OUTPUT); 
+  digitalWrite(BUZZER, 0); //Wylaczenie buzzera
+  pinMode(LED, OUTPUT);
   digitalWrite(LED, 0); //Wylaczenie diody
 
   Serial.begin(9600);
@@ -75,12 +77,12 @@ void leftMotor(int V) {
   if (V > 0) { //Jesli predkosc jest wieksza od 0 (dodatnia)
     V = map(V, 0, 100, 0, PWM_MAX);
     digitalWrite(L_DIR, 0); //Kierunek: do przodu
-    analogWrite(L_PWM, V); //Ustawienie predkosci 
+    analogWrite(L_PWM, V); //Ustawienie predkosci
   } else {
     V = abs(V); //Funkcja abs() zwroci wartosc V  bez znaku
     V = map(V, 0, 100, 0, PWM_MAX);
     digitalWrite(L_DIR, 1); //Kierunek: do tyłu
-    analogWrite(L_PWM, V); //Ustawienie predkosci    
+    analogWrite(L_PWM, V); //Ustawienie predkosci
   }
 }
 
@@ -88,12 +90,12 @@ void rightMotor(int V) {
   if (V > 0) { //Jesli predkosc jest wieksza od 0 (dodatnia)
     V = map(V, 0, 100, 0, PWM_MAX);
     digitalWrite(R_DIR, 0); //Kierunek: do przodu
-    analogWrite(R_PWM, V); //Ustawienie predkosci 
+    analogWrite(R_PWM, V); //Ustawienie predkosci
   } else {
     V = abs(V); //Funkcja abs() zwroci wartosc V  bez znaku
     V = map(V, 0, 100, 0, PWM_MAX);
     digitalWrite(R_DIR, 1); //Kierunek: do tyłu
-    analogWrite(R_PWM, V); //Ustawienie predkosci    
+    analogWrite(R_PWM, V); //Ustawienie predkosci
   }
 }
 
