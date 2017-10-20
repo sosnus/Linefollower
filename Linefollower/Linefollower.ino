@@ -20,17 +20,14 @@ void algorytm()
   for(int i=0;i<=5;i++)
   {
   czujniki_adc[i] = analogRead(adc_kanal[i]);
-  if(czujniki_adc[i]<800)czujniki_bin[i] = 1 else czujniki_bin[i]=0;
+  if(czujniki_adc[i]<800) czujniki_bin[i] = 1; else czujniki_bin[i]=0;
   }
 
   //wypisujemy wartości adc na ekran
   Serial.print("\n\r ODCZYTY: ");
   for(int i=0;i<=5;i++)
   {
-      Serial.print(i);
-      Serial.print(".=");
-      Serial.print(czujniki_adc[i]);
-      Serial.print("  ");
+      Serial.print(czujniki_bin[i]);
   }
  
    
