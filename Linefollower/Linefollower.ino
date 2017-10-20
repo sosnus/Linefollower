@@ -9,26 +9,42 @@
 #define BUZZER 10
 #define LED 13
 
+int blad = 0;
+int liczba_czuj_na_linii = 0;
 int granica = 800;
+int czujniki_waga[6] = {-30,-20,-10,10,20,30};
 int czujniki_adc[6];
 int czujniki_bin[6];
 const int adc_kanal[]= {A0,A1,A2,A3,A4,A5};
 
 void algorytm()
 {
+  //zerowanie zmiennych!!!
+  blad=0;
+  liczba_czuj_na_linii = 0;
   //odczytaj wartości z czujników i zapisz do tablicy czujniki_adc[] oraz zapełnianie tablicy czujniki)bin[]
   for(int i=0;i<=5;i++)
   {
   czujniki_adc[i] = analogRead(adc_kanal[i]);
-  if(czujniki_adc[i]<800) czujniki_bin[i] = 1; else czujniki_bin[i]=0;
+  if(czujniki_adc[i]<800) czujniki_bin[i] = 0; else czujniki_bin[i]=1;
   }
 
-  //wypisujemy wartości adc na ekran
-  Serial.print("\n\r ODCZYTY: ");
-  for(int i=0;i<=5;i++)
+  //obliczamy uchyb aktualny (błąd)
+for(int i=0;i<=5;i++)
+{
+  if(czujniki_bin[i]==1)
   {
-      Serial.print(czujniki_bin[i]);
-  }
+    blad = blad + czujniki_waga[i];
+    liczba_czuj_na_linii++;
+    }
+}
+blad = blad / liczba_czuj_na_linii;
+  
+
+  //wypisujemy wartości cyfrowe (binarne) na ekran
+  Serial.print("\n\r BLAD=");
+Serial.print(blad);
+
  
    
   delay(250);
