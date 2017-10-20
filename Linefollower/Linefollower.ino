@@ -11,7 +11,24 @@
 
 int czujniki_adc[6];
 int czujniki_bin[6];
+const int adc_kanal[]= {A0,A1,A2,A3,A4,A5};
 
+void algorytm()
+{
+  for(int i=0;i<=5;i++) czujniki_adc[i] = analogRead(adc_kanal[i]);
+
+  Serial.print("\n\r ODCZYTY: ");
+  for(int i=0;i<=5;i++)
+  {
+      Serial.print(i);
+      Serial.print(".=");
+      Serial.print(czujniki_adc[i]);
+      Serial.print("  ");
+  }
+ 
+   
+  delay(250);
+}
 
 void setup() {
   //Konfiguracja pinow od mostka H
@@ -30,11 +47,8 @@ void setup() {
 }
 
 void loop() {
-  int odczytLewy = analogRead(L_LINE_SENSOR);
- 
-  Serial.print("Lewy czujnik: ");
-  Serial.println(odczytLewy);
-  delay(250);
+  algorytm();
+
 }
 
 void leftMotor(int V) {
