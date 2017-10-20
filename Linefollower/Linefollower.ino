@@ -1,5 +1,5 @@
-#define L_PWM 5
-#define L_DIR 4
+#define L_PWM 4
+#define L_DIR 10
 #define R_PWM 6
 #define R_DIR 9
 #define PWM_MAX 165
@@ -9,7 +9,11 @@
 #define BUZZER 10
 #define LED 13
 
+const int pwm=50;
+
 int blad = 0;
+int blad_poprzedni = 0;
+int wzmocnienie_kp = 2;
 int liczba_czuj_na_linii = 0;
 int granica = 800;
 int czujniki_waga[6] = { -30, -20, -10, 10, 20, 30};
@@ -38,7 +42,9 @@ void algorytm()
       liczba_czuj_na_linii++;
     }
   }
-  blad = blad / liczba_czuj_na_linii;
+//czy robot jest na linii?
+if(liczba_czuj_na_linii > 0) blad = blad / liczba_czuj_na_linii;
+  else  blad = blad_poprzedni;
 
 
   //wypisujemy wartości cyfrowe (binarne) na ekran
@@ -46,9 +52,14 @@ void algorytm()
   Serial.print(blad);
 
   Serial.print("    CZUJNIKI= ");
-  for(int i=0;i<=5;i++)
-      Serial.print(czujniki_bin[i]);
+  for(int i=0;i<=5;i++) Serial.print(czujniki_bin[i]);
 
+//wysterowanie silnikow
+blad = blad * wzmocnienie_kp;
+analogWrite(L_PWM,pwm-blad);
+analogWrite(R_PWM,pwm+blad);
+//zapamietaj blad poprzedni na wypadek wypadniecia
+blad_poprzedni = blad;
   delay(250);
 }// -------   KONIEC ALGORYTMU LF ------
 
@@ -58,6 +69,9 @@ void setup() {
   pinMode(R_DIR, OUTPUT);
   pinMode(L_PWM, OUTPUT);
   pinMode(R_PWM, OUTPUT);
+//zmien jesli silniki kreci sie w zla strone
+pinMode(L_DIR,HIGH);
+pinMode(R_DIR,HIGH);
 
   //Konfiguracja pozostalych elementow
   pinMode(BUZZER, OUTPUT);
