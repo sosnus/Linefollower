@@ -9,14 +9,21 @@
 #define BUZZER 10
 #define LED 13
 
+int granica = 800;
 int czujniki_adc[6];
 int czujniki_bin[6];
 const int adc_kanal[]= {A0,A1,A2,A3,A4,A5};
 
 void algorytm()
 {
-  for(int i=0;i<=5;i++) czujniki_adc[i] = analogRead(adc_kanal[i]);
+  //odczytaj wartości z czujników i zapisz do tablicy czujniki_adc[] oraz zapełnianie tablicy czujniki)bin[]
+  for(int i=0;i<=5;i++)
+  {
+  czujniki_adc[i] = analogRead(adc_kanal[i]);
+  if(czujniki_adc[i]<800)czujniki_bin[i] = 1 else czujniki_bin[i]=0;
+  }
 
+  //wypisujemy wartości adc na ekran
   Serial.print("\n\r ODCZYTY: ");
   for(int i=0;i<=5;i++)
   {
@@ -28,7 +35,7 @@ void algorytm()
  
    
   delay(250);
-}
+}// -------   KONIEC ALGORYTMU LF ------
 
 void setup() {
   //Konfiguracja pinow od mostka H
